@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -35,6 +36,30 @@ func CheckDomain(domain string) {
 	txtRecords, err := net.LookupTXT(domain)
 	if err!= nil{
 		log.Printf("Error: %v\n",err)
+	}
+	if err != nil{
+		log.Printf("Error: %v\n",err);
+	}
+
+	for _, record : range txtRecords{
+		if strings.HasPrefix(record, "v=spf1"){
+			hasSPF = true
+			spfRecord = record
+			break
+		}
+	}
+
+	dmarcRecods, err := net.LookupTXT("_dmarc." + domain)
+	if err != nil{
+		lof.Printf("Error",err)
+	}
+
+	for _, record : range dmarcRecords{
+		if strings.HasPrefix(record, "v=DMARC1"){
+			hasDMARC = true
+			dmarcRecord = record
+			break
+		}
 	}
 	
 }
